@@ -1,0 +1,31 @@
+TrainingID,UnitID,TrainingType,TrainingName,ScheduledDate,CompletedDate,ParticipantsScheduled,ParticipantsCompleted,PassRate,AverageScore,TrainingStatus
+T001,U001,Weapons Qualification,M4 Carbine Qualification,2025-01-10,2025-01-10,150,142,95.1,38.5,COMPLETED
+T002,U002,Weapons Qualification,M4 Carbine Qualification,2025-01-11,2025-01-11,148,145,97.2,39.2,COMPLETED
+T003,U003,Weapons Qualification,M4 Carbine Qualification,2025-01-12,2025-01-12,145,128,89.8,36.8,COMPLETED
+T004,U001,Physical Fitness,ACFT Annual,2025-01-15,2025-01-15,150,142,92.3,485,COMPLETED
+T005,U002,Physical Fitness,ACFT Annual,2025-01-16,2025-01-16,148,145,94.5,495,COMPLETED
+T006,U003,Physical Fitness,ACFT Annual,2025-01-17,2025-01-17,145,128,88.3,465,COMPLETED
+T007,U004,Tactical Training,Land Navigation,2025-01-20,2025-01-20,152,149,96.6,92,COMPLETED
+T008,U005,Tactical Training,Land Navigation,2025-01-21,2025-01-21,147,132,91.7,88,COMPLETED
+T009,U006,Tactical Training,Land Navigation,2025-01-22,2025-01-22,149,145,93.8,90,COMPLETED
+T010,U007,Weapons Qualification,M4 Carbine Qualification,2025-01-25,2025-01-25,155,151,98.7,39.8,COMPLETED
+T011,U008,Weapons Qualification,M4 Carbine Qualification,2025-01-26,2025-01-26,153,148,96.6,39.0,COMPLETED
+T012,U009,Weapons Qualification,M4 Carbine Qualification,2025-01-27,2025-01-27,150,120,85.0,35.2,COMPLETED
+T013,U010,Weapons Qualification,M4 Carbine Qualification,2025-01-28,2025-01-28,148,144,95.8,38.8,COMPLETED
+T014,U001,Medical Training,Combat Lifesaver Course,2025-02-01,2025-02-03,30,28,96.4,88,COMPLETED
+T015,U002,Medical Training,Combat Lifesaver Course,2025-02-05,2025-02-07,30,29,93.1,86,COMPLETED
+T016,U003,Medical Training,Combat Lifesaver Course,2025-02-08,2025-02-10,30,26,88.5,82,COMPLETED
+T017,U007,Physical Fitness,ACFT Annual,2025-02-12,2025-02-12,155,151,97.4,505,COMPLETED
+T018,U008,Physical Fitness,ACFT Annual,2025-02-13,2025-02-13,153,148,95.3,498,COMPLETED
+T019,U009,Physical Fitness,ACFT Annual,2025-02-14,2025-02-14,150,120,82.5,455,COMPLETED
+T020,U010,Physical Fitness,ACFT Annual,2025-02-15,2025-02-15,148,144,93.8,490,COMPLETED
+T021,U004,Weapons Qualification,M4 Carbine Qualification,2025-02-18,2025-02-18,152,150,98.0,39.5,COMPLETED
+T022,U005,Weapons Qualification,M4 Carbine Qualification,2025-02-19,2025-02-19,147,140,95.0,38.5,COMPLETED
+T023,U006,Weapons Qualification,M4 Carbine Qualification,2025-02-20,2025-02-20,149,146,96.6,39.1,COMPLETED
+T024,U001,Tactical Training,Squad Live Fire Exercise,2025-03-01,2025-03-01,150,148,94.6,88,COMPLETED
+T025,U002,Tactical Training,Squad Live Fire Exercise,2025-03-02,2025-03-02,148,146,95.9,90,COMPLETED
+T026,U003,Tactical Training,Squad Live Fire Exercise,2025-03-03,2025-03-03,145,142,92.3,86,COMPLETED
+T027,U007,Tactical Training,Airborne Operations,2025-03-10,2025-03-10,155,154,99.4,95,COMPLETED
+T028,U008,Tactical Training,Airborne Operations,2025-03-11,2025-03-11,153,151,98.7,94,COMPLETED
+T029,U009,Tactical Training,Airborne Operations,2025-03-12,2025-03-12,150,145,96.7,90,COMPLETED
+T030,U010,Tactical Training,Airborne Operations,2025-03-13,2025-03-13,148,147,97.3,92,COMPLETED
