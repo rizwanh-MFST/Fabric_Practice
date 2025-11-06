@@ -63,7 +63,6 @@ Power BI Report
 4. You should see three folders:
    - **Files**: For unstructured data
    - **Tables**: For Delta tables
-   - **Schemas**: For organizing tables
 
 > **Note**: The Lakehouse is built on Delta Lake and provides ACID transactions, scalability, and unified batch/streaming processing.
 
@@ -1134,3 +1133,4 @@ ORDER BY AvgPassRate DESC;
 **Date: November 2025**
 
 **UNCLASSIFIED // FOR TRAINING USE ONLY**
+
