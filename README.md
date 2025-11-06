@@ -1,5 +1,18 @@
 # Microsoft Fabric Lab - Army Unit Readiness Analytics
 
+---
+
+## ⚠️ **IMPORTANT DISCLAIMER**
+
+**This lab uses entirely fictional data for educational purposes only.**
+
+- All unit names, personnel data, equipment information, and readiness metrics are **completely fabricated**
+- No actual US Army units, operations, or classified information are referenced
+- Data has been created solely to demonstrate Microsoft Fabric capabilities
+- This is a **training exercise** and does not reflect real military operations
+
+---
+
 ## Lab Overview
 
 This comprehensive lab teaches Microsoft Fabric capabilities through a practical Army unit readiness scenario. Students will build an end-to-end analytics solution from data ingestion to Power BI reporting.
