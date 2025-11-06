@@ -68,7 +68,7 @@ By completing this lab, students will learn to:
    - Apply conditional formatting
 
 4. **Automation & Governance** (Optional)
-   - Schedule notebook execution
+   - Schedule pipeline execution
    - Set up automated data refreshes
 
 ---
@@ -105,7 +105,7 @@ Power BI Report (Interactive Dashboard)
 
 ### Prerequisites
 - Access to Microsoft Fabric workspace with F32 capacity
-- Permissions to create Lakehouses, Pipelines, Notebooks, and Reports
+- Permissions to create Lakehouses, Pipelines, Dataflows, and Reports
 - Basic understanding of SQL and data concepts
 
 ### Setup Steps
@@ -115,9 +115,10 @@ Power BI Report (Interactive Dashboard)
    - Create new workspace: `Army_Readiness_Analytics`
    - Assign F32 capacity
 
-2. **Upload Sample Data**
-   - Copy the 3 CSV files from `sample-data/` folder
-   - These will be used as source data
+2. **Access Sample Data**
+   - CSV files are hosted on GitHub
+   - URLs provided in the lab guide
+   - Web connector will load data directly into Dataflow Gen2
 
 3. **Follow Lab Guide**
    - Open `Lab_Guide_Army_Readiness_Analytics.md`
@@ -152,7 +153,7 @@ Fabric/
 - Create Lakehouse
 
 ### Part 2: Data Pipeline Creation (15 min)
-- Upload CSV files to Lakehouse
+- Access CSV files from GitHub
 - Create Data Pipeline for orchestration
 
 ### Part 3: Data Transformation with Dataflow Gen2 (45 min)
@@ -234,7 +235,7 @@ This lab can be easily customized for different scenarios:
 
 1. **Change Data Domain**
    - Replace sample CSVs with other operational data
-   - Modify column names and transformations in notebook
+   - Modify column names and transformations in Dataflow Gen2
    - Update DAX measures for new metrics
 
 2. **Expand Data Sources**
@@ -326,7 +327,7 @@ Upon completion, students should have:
 
 1. ✅ Functional Fabric workspace with all components
 2. ✅ Bronze/Silver/Gold Delta tables in Lakehouse
-3. ✅ Working PySpark notebook with transformations
+3. ✅ Working Dataflow Gen2 with Power Query transformations
 4. ✅ Semantic model with relationships and DAX measures
 5. ✅ Interactive Power BI dashboard
 6. ✅ (Optional) Scheduled automated refreshes
@@ -355,12 +356,12 @@ All data in this lab is fictional and unclassified. No real unit information, pe
 
 ## 📅 Version History
 
-- **Version 1.0** (November 2025) - Initial release
-  - Complete lab guide with 8 parts
-  - 3 sample CSV datasets
-  - PySpark notebook with 20+ cells
-  - 60+ SQL queries
-  - Comprehensive Power BI guide
+- **Version 2.0** (November 2025) - Streamlined Dataflow Gen2 version
+  - Complete lab guide with 6 parts (1-2 hours)
+  - 3 sample CSV datasets hosted on GitHub
+  - Dataflow Gen2 with Power Query transformations
+  - Low-code approach using visual interface
+  - Comprehensive Power BI quick build guide
 
 ---
 
