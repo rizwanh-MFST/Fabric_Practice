@@ -27,13 +27,11 @@
 ## **Lab Architecture**
 
 ```
-CSV Data Sources
+CSV Data Sources (GitHub)
     ↓
-Data Pipeline (Copy Activity)
+Data Pipeline (Orchestration)
     ↓
-Lakehouse Files
-    ↓
-Dataflow Gen2 (Power Query Transformations)
+Dataflow Gen2 (Web Connector + Power Query Transformations)
     ↓
 Lakehouse Tables (Bronze/Silver/Gold)
     ↓
@@ -73,25 +71,22 @@ Power BI Report
 
 ## **Part 2: Create Data Pipeline for Ingestion (15 minutes)**
 
-### **Exercise 2.1: Upload Sample Data Files**
+### **Exercise 2.1: Get Sample Data from GitHub**
 
-For this lab, we'll use three CSV files representing Army operational data:
+For this lab, we'll use three CSV files representing Army operational data hosted on GitHub:
 
 1. **personnel_readiness.csv** - Unit personnel status and readiness scores
 2. **equipment_inventory.csv** - Equipment condition and maintenance status  
 3. **training_metrics.csv** - Training completion and performance data
 
-**Upload the files to Lakehouse Files folder:**
+**GitHub Data Sources:**
 
-1. In your Lakehouse, click on the **Files** folder
-2. Click **Upload** → **Upload files**
-3. Upload all three CSV files from the `sample-data` folder:
-   - `personnel_readiness.csv`
-   - `equipment_inventory.csv`
-   - `training_metrics.csv`
-4. Verify files appear in the **Files** folder
+The CSV files are available at these URLs:
+- Personnel: `https://raw.githubusercontent.com/rizwanh-MFST/Fabric_Practice/refs/heads/main/sample-data/personnel_readiness.csv`
+- Equipment: `https://raw.githubusercontent.com/rizwanh-MFST/Fabric_Practice/refs/heads/main/sample-data/equipment_inventory.csv`
+- Training: `https://raw.githubusercontent.com/rizwanh-MFST/Fabric_Practice/refs/heads/main/sample-data/training_metrics.csv`
 
-> **💡 Tip**: In a production environment, you would use the Pipeline's Copy activity to pull data directly from SQL databases, REST APIs, or file shares.
+> **💡 Note**: We'll load these files directly in the Dataflow Gen2 using the Web connector. No manual uploads required!
 
 ### **Exercise 2.2: Create a Data Pipeline**
 
@@ -102,18 +97,7 @@ For this lab, we'll use three CSV files representing Army operational data:
 
 The pipeline will orchestrate our data ingestion and transformation processes.
 
-### **Exercise 2.3: Verify Data in Lakehouse**
-
-1. Navigate back to `ArmyReadinessLakehouse`
-2. Click on **Files** folder
-3. Verify all three CSV files are present:
-   - `personnel_readiness.csv` (30 rows)
-   - `equipment_inventory.csv` (30 rows)
-   - `training_metrics.csv` (30 rows)
-
-> **📝 Note**: Since we manually uploaded the files, we've completed the initial data landing. In production, you'd use Pipeline Copy activities to automate this process.
-
-> **✅ Checkpoint**: You now have sample data uploaded and a pipeline ready for orchestration!
+> **✅ Checkpoint**: You now have a pipeline ready, and we'll connect to the GitHub data sources in the next section!
 
 ---
 
@@ -127,26 +111,30 @@ The pipeline will orchestrate our data ingestion and transformation processes.
 
 > **💡 Tip**: Dataflow Gen2 uses Power Query (the same transformation engine as Power BI) to create reusable ETL logic with a visual, low-code interface.
 
-### **Exercise 3.2: Load Personnel Data (Bronze Layer)**
+### **Exercise 3.2: Load Personnel Data from GitHub (Bronze Layer)**
 
 1. In the Power Query editor, click **Get data**
-2. Select **Lakehouse** → Click **Next**
-3. Navigate to `ArmyReadinessLakehouse` → **Files** folder
-4. Select `personnel_readiness.csv` → Click **Create**
-5. Power Query will preview the data
+2. Search for and select **Web** → Click **Next**
+3. In the URL field, paste:
+   ```
+   https://raw.githubusercontent.com/rizwanh-MFST/Fabric_Practice/refs/heads/main/sample-data/personnel_readiness.csv
+   ```
+4. Click **OK**
+5. Power Query will connect and preview the data
+6. If prompted for authentication, select **Anonymous** → Click **Connect**
 
 **Configure the Bronze query:**
 
-6. In the **Query settings** pane (right side), rename the query to: `bronze_personnel_readiness`
-7. Verify column types are correct (Power Query auto-detects types)
-8. Click **Add data destination** (bottom right)
-9. Select **Lakehouse**
-10. Choose `ArmyReadinessLakehouse`
-11. Select **New table**
-12. Table name: `bronze_personnel_readiness`
-13. Click **Next** → **Save settings**
+7. In the **Query settings** pane (right side), rename the query to: `bronze_personnel_readiness`
+8. Verify column types are correct (Power Query auto-detects types)
+9. Click **Add data destination** (bottom right)
+10. Select **Lakehouse**
+11. Choose `ArmyReadinessLakehouse`
+12. Select **New table**
+13. Table name: `bronze_personnel_readiness`
+14. Click **Next** → **Save settings**
 
-> **✅ Bronze Layer Complete**: You've created a query that loads raw CSV data to a Bronze table.
+> **✅ Bronze Layer Complete**: You've created a query that loads CSV data from GitHub to a Bronze table.
 
 ### **Exercise 3.3: Transform Personnel Data (Silver Layer)**
 
@@ -171,7 +159,9 @@ Now we'll create a Silver layer with calculated columns:
    - **Formula**: `= [PersonnelAssigned] - [PersonnelPresent]`
    - Click **OK**
 
-8. Click **Add column** → **Conditional column**
+8. Right-click the `PersonnelAbsent` column → **Change type** → **Whole number**
+
+9. Click **Add column** → **Conditional column**
    - **New column name**: `ReadinessCategory`
    - **If** `ReadinessScore` **is greater than or equal to** `95` **then** `Excellent`
    - **Add clause**: **else if** `ReadinessScore` **is greater than or equal to** `90` **then** `Good`
@@ -192,9 +182,12 @@ Now we'll create a Silver layer with calculated columns:
 
 **Create Bronze Equipment Query:**
 
-1. Click **Get data** → **More** → **Lakehouse**
-2. Navigate to `ArmyReadinessLakehouse` → **Files**
-3. Select `equipment_inventory.csv` → Click **Create**
+1. Click **Get data** → **Web**
+2. Paste URL:
+   ```
+   https://raw.githubusercontent.com/rizwanh-MFST/Fabric_Practice/refs/heads/main/sample-data/equipment_inventory.csv
+   ```
+3. Click **OK** → If prompted, select **Anonymous** → **Connect**
 4. Rename query to: `bronze_equipment_inventory`
 5. Add destination: Lakehouse → `ArmyReadinessLakehouse` → New table: `bronze_equipment_inventory`
 
@@ -212,7 +205,7 @@ Now we'll create a Silver layer with calculated columns:
 
 9. **Add column** → **Custom column**
    - Name: `DaysUntilInspection`
-   - Formula: `= Duration.Days([NextInspectionDate] - DateTime.LocalNow())`
+   - Formula: `= Duration.Days(DateTime.From([NextInspectionDate]) - DateTime.LocalNow())`
    - Change type to Whole number
 
 10. **Add column** → **Conditional column**
@@ -227,28 +220,31 @@ Now we'll create a Silver layer with calculated columns:
 
 **Create Bronze Training Query:**
 
-1. Click **Get data** → **Lakehouse**
-2. Select `training_metrics.csv` from `ArmyReadinessLakehouse/Files`
-3. Rename query to: `bronze_training_metrics`
-4. Add destination: New table: `bronze_training_metrics`
+1. Click **Get data** → **Web**
+2. Paste URL:
+   ```
+   https://raw.githubusercontent.com/rizwanh-MFST/Fabric_Practice/refs/heads/main/sample-data/training_metrics.csv
+   ```
+3. Click **OK** → If prompted, select **Anonymous** → **Connect**
+4. Rename query to: `bronze_training_metrics`
+5. Add destination: New table: `bronze_training_metrics`
 
 **Create Silver Training Query:**
 
-5. Right-click `bronze_training_metrics` → **Reference**
-6. Rename to: `silver_training_metrics`
+6. Right-click `bronze_training_metrics` → **Reference**
+7. Rename to: `silver_training_metrics`
 
 **Add transformations:**
 
-7. **Add column** → **Custom column**
+8. **Add column** → **Custom column**
    - Name: `CompletionRate`
    - Formula: `= [ParticipantsCompleted] / [ParticipantsScheduled] * 100`
    - Change type to Decimal, Round to 2 places
 
-8. **Add column** → **Conditional column**
+8. **Add column** → **Custom column**
    - Name: `TrainingEffectiveness`
-   - If `PassRate` **is greater than or equal to** `95` **and** `CompletionRate` **is greater than or equal to** `95` then `Highly Effective`
-   - else if `PassRate` **is greater than or equal to** `90` **and** `CompletionRate` **is greater than or equal to** `90` then `Effective`
-   - Otherwise: `Needs Improvement`
+   - Formula: `if [PassRate] >= 95 and [CompletionRate] >= 95 then "Highly Effective" else if [PassRate] >= 90 and [CompletionRate] >= 90 then "Effective" else "Needs Improvement"`
+   - Click **OK**
 
 9. Add destination: Lakehouse → New table: `silver_training_metrics`
 
@@ -285,7 +281,7 @@ Now we'll create a Silver layer with calculated columns:
 
 8. Add destination: Lakehouse → New table: `gold_unit_readiness_summary`
 
-### **Exercise 3.7: Publish the Dataflow**
+### **Exercise 3.7: Save and Run the Dataflow**
 
 1. Review all queries in the **Queries pane** (left side):
    - ✅ bronze_personnel_readiness
@@ -296,9 +292,11 @@ Now we'll create a Silver layer with calculated columns:
    - ✅ silver_training_metrics
    - ✅ gold_unit_readiness_summary
 
-2. Click **Publish** (bottom right)
-3. Wait for publishing to complete (~1-2 minutes)
-4. The dataflow will automatically refresh and load data to all destination tables
+2. Click **Save & run** (bottom left) or use the dropdown for other save options
+3. Give your dataflow a name if prompted (e.g., `Army_Readiness_Dataflow`)
+4. Wait for the dataflow to save and run (~1-2 minutes)
+5. Monitor the refresh status - you'll see progress indicators for each query
+6. Once complete, the dataflow will have loaded data to all Bronze, Silver, and Gold tables in the Lakehouse
 
 > **✅ Checkpoint**: Your Dataflow Gen2 has created Bronze, Silver, and Gold tables in the Lakehouse!
 
@@ -326,24 +324,31 @@ Now we'll create a Silver layer with calculated columns:
 4. Name it: `ArmyReadinessSemanticModel`
 5. Select the following tables:
    - ✅ `gold_unit_readiness_summary` (main fact table)
+   - ✅ `silver_personnel_readiness` (for personnel details)
    - ✅ `silver_equipment_inventory` (for equipment details)
    - ✅ `silver_training_metrics` (for training details)
 6. Click **Confirm**
 
-> **💡 Architecture Note**: The Gold table serves as our main aggregated fact table. We include Silver tables for detailed equipment and training analysis.
+> **💡 Architecture Note**: The Gold table serves as our main aggregated fact table. We include Silver tables for detailed personnel, equipment, and training analysis.
 
 ### **Exercise 4.2: Define Relationships**
 
 1. The semantic model will open in model view
 2. Create relationships by dragging fields between tables:
 
-**Relationship 1: Gold → Equipment**
+**Relationship 1: Gold → Personnel**
+- From: `gold_unit_readiness_summary[UnitID]`
+- To: `silver_personnel_readiness[UnitID]`
+- Cardinality: **One-to-Many** (one unit can have many personnel reports)
+- Cross filter direction: Both
+
+**Relationship 2: Gold → Equipment**
 - From: `gold_unit_readiness_summary[UnitID]`
 - To: `silver_equipment_inventory[UnitID]`
 - Cardinality: **One-to-Many** (one unit can have many equipment items)
 - Cross filter direction: Both
 
-**Relationship 2: Gold → Training**
+**Relationship 3: Gold → Training**
 - From: `gold_unit_readiness_summary[UnitID]`
 - To: `silver_training_metrics[UnitID]`
 - Cardinality: **One-to-Many** (one unit can have many training events)
@@ -421,7 +426,19 @@ DIVIDE(
 ) * 100
 ```
 
-4. Click **Save** to save the semantic model
+5. Click on `silver_training_metrics` table and add:
+
+**Measure 9: Avg Training Pass Rate**
+```dax
+Avg Training Pass Rate = AVERAGE(silver_training_metrics[PassRate])
+```
+
+**Measure 10: Avg Completion Rate**
+```dax
+Avg Completion Rate = AVERAGE(silver_training_metrics[CompletionRate])
+```
+
+6. Click **Save** to save the semantic model
 
 > **✅ Checkpoint**: Your semantic model is ready with relationships and key measures!
 
@@ -460,11 +477,13 @@ DIVIDE(
 
 **Visual 1: Readiness by Division (Stacked Bar Chart)**
 1. Insert → Stacked bar chart
-2. Y-axis: `gold_unit_readiness_summary[Division]`
-3. X-axis: `[Total Units]`
-4. Legend: `gold_unit_readiness_summary[OverallReadiness]`
+2. **Legend** (add this FIRST): `gold_unit_readiness_summary[OverallReadiness]`
+3. **Y-axis**: `gold_unit_readiness_summary[Division]`
+4. **X-axis**: `gold_unit_readiness_summary[UnitID]` (Count Distinct)
 5. Format data colors: GREEN = Green, AMBER = Yellow, RED = Red
 6. Title: "Unit Readiness Status by Division"
+
+> **💡 Tip**: Add the Legend field first before the axes - this helps Power BI establish the correct grouping. If a division still doesn't appear, verify the gold_unit_readiness_summary table has data for both divisions.
 
 **Visual 2: Readiness Trend (Line Chart)**
 1. Insert → Line chart
@@ -512,14 +531,19 @@ DIVIDE(
 
 ## **Part 6: Automation (Optional - 10 minutes)**
 
-### **Exercise 6.1: Schedule Notebook Refresh**
+### **Exercise 6.1: Schedule Pipeline Refresh**
 
-1. Navigate to `Army_Readiness_ETL` notebook
-2. Click **Run** → **Schedule**
-3. Configure:
-   - Schedule name: `Daily_Refresh`
-   - Frequency: Daily at 06:00
-4. Click **Save**
+1. Navigate to your workspace: `Army_Readiness_Analytics`
+2. Find the `Ingest_Army_Data` pipeline
+3. Click **...** (More options) → **Settings**
+4. Under **Scheduled refresh**, toggle to **On**
+5. Configure:
+   - **Frequency**: Daily
+   - **Time**: 06:00 (6:00 AM)
+   - **Time zone**: Your local time zone
+6. Click **Apply**
+
+> **💡 Note**: The pipeline will automatically run the Dataflow Gen2, which loads and transforms all data into Bronze, Silver, and Gold tables.
 
 ### **Exercise 6.2: Configure Semantic Model Refresh**
 
@@ -527,10 +551,10 @@ DIVIDE(
 2. Click **Settings** (gear icon)
 3. Under **Scheduled refresh**:
    - Toggle to **On**
-   - Frequency: Daily at 07:00 (after notebook)
+   - Frequency: Daily at 07:00 (after pipeline completes)
 4. Click **Apply**
 
-> **💡 Tip**: The notebook runs first to refresh data, then the semantic model refreshes to pull the latest data into Power BI.
+> **💡 Tip**: The pipeline runs first to refresh data via Dataflow Gen2, then the semantic model refreshes to pull the latest data into Power BI.
 
 ---
 
@@ -538,15 +562,15 @@ DIVIDE(
 
 ### **What You Accomplished:**
 
-✅ **Data Ingestion**: Loaded CSV files into Lakehouse Bronze tables using notebooks
+✅ **Data Ingestion**: Loaded CSV files from GitHub into Lakehouse Bronze tables using Dataflow Gen2
 
-✅ **Data Transformation**: Used PySpark to transform raw data into curated Silver and Gold layers
+✅ **Data Transformation**: Used Dataflow Gen2 (Power Query) to transform raw data into curated Silver and Gold layers
 
 ✅ **Data Modeling**: Built a semantic model with relationships and DAX measures
 
 ✅ **Visualization**: Created a Power BI dashboard with KPIs and interactive visuals
 
-✅ **Automation**: (Optional) Scheduled automated refreshes for the entire pipeline
+✅ **Automation**: (Optional) Scheduled automated refreshes for pipeline and semantic model
 
 ### **Microsoft Fabric Benefits for Army Operations:**
 
@@ -615,11 +639,11 @@ DIVIDE(
 
 ## **Appendix B: Troubleshooting Guide**
 
-### **Issue: Notebook can't find CSV files**
-- **Solution**: Verify files are uploaded to Files folder in Lakehouse, check file names match exactly
+### **Issue: Dataflow Gen2 can't connect to GitHub URLs**
+- **Solution**: Verify GitHub raw URLs are correct, ensure Anonymous authentication is selected, check internet connectivity
 
-### **Issue: Transformation errors in notebook**
-- **Solution**: Run cells in sequence, ensure previous cells completed successfully
+### **Issue: Web connector shows authentication errors**
+- **Solution**: Select "Anonymous" authentication when connecting to GitHub raw URLs, do not use other auth methods
 
 ### **Issue: Semantic model shows no data**
 - **Solution**: Check relationships are correctly defined, manually refresh semantic model
@@ -846,38 +870,25 @@ DIVIDE(
 ### **Exercise 7.1: Schedule Pipeline Refresh**
 
 1. Navigate to your workspace
-2. Find `Pipeline_Ingest_Readiness_Data`
+2. Find `Ingest_Army_Data`
 3. Click the **...** (More options) → **Settings**
-4. Under **Scheduled refresh**, click **Add schedule**
+4. Under **Scheduled refresh**, toggle to **On**
 5. Configure:
    - **Frequency**: Daily
    - **Time**: 0600 (6:00 AM)
    - **Time zone**: Your local time zone
 6. Click **Apply**
 
-> **Note**: In a real scenario, your source data would be updated regularly (e.g., from SQL databases, APIs). The pipeline would automatically pull the latest data.
+> **Note**: The pipeline orchestrates the Dataflow Gen2, which loads and transforms all data from GitHub into Bronze, Silver, and Gold tables.
 
-### **Exercise 7.2: Schedule Notebook Execution**
-
-1. Navigate to `Transform_Readiness_Data` notebook
-2. Click **Run** → **Schedule**
-3. Configure:
-   - **Schedule name**: `Daily_Transform_0630`
-   - **Start**: Today's date
-   - **Frequency**: Daily at 06:30
-   - **Time zone**: Your local time zone
-4. Click **Save**
-
-This ensures your transformations run 30 minutes after data ingestion.
-
-### **Exercise 7.3: Set Semantic Model Refresh**
+### **Exercise 7.2: Set Semantic Model Refresh**
 
 1. Navigate to `ArmyReadinessSemanticModel`
 2. Click **Settings** (gear icon)
 3. Under **Scheduled refresh**:
    - Toggle **Keep your data up to date** to **On**
    - **Refresh frequency**: Daily
-   - **Time**: 07:00 (after pipeline and notebook complete)
+   - **Time**: 07:00 (after pipeline completes)
 4. Click **Apply**
 
 > **✅ Checkpoint**: Your entire data pipeline is now automated! Data will refresh daily without manual intervention.
@@ -938,9 +949,9 @@ Data Activator can send alerts when readiness drops below thresholds.
 
 ### **What You Accomplished:**
 
-✅ **Data Ingestion**: Created a data pipeline to load CSV files into Lakehouse Delta tables
+✅ **Data Ingestion**: Created a data pipeline to orchestrate Dataflow Gen2 for loading CSV files from GitHub
 
-✅ **Data Transformation**: Used notebooks (PySpark) to transform raw data into curated Silver and Gold layers
+✅ **Data Transformation**: Used Dataflow Gen2 (Power Query) to transform raw data into curated Silver and Gold layers
 
 ✅ **Data Modeling**: Built a semantic model with relationships and DAX measures
 
@@ -1073,20 +1084,20 @@ ORDER BY AvgPassRate DESC;
 
 ## **Appendix C: Troubleshooting Guide**
 
-### **Issue: Pipeline fails to copy data**
-- **Solution**: Check file paths are correct, verify CSV format (UTF-8 encoding)
+### **Issue: Pipeline fails to run**
+- **Solution**: Check that Dataflow Gen2 is published, verify workspace capacity is active
 
-### **Issue: Notebook can't find table**
-- **Solution**: Ensure Lakehouse is attached to notebook, refresh table list
+### **Issue: Dataflow Gen2 errors during refresh**
+- **Solution**: Verify GitHub URLs are accessible, check Anonymous authentication is selected, review query transformations for errors
 
 ### **Issue: Semantic model shows no data**
-- **Solution**: Check relationships are correctly defined, verify table names
+- **Solution**: Check relationships are correctly defined, manually refresh semantic model, verify Dataflow Gen2 completed successfully
 
 ### **Issue: Report visuals are blank**
 - **Solution**: Ensure semantic model has been refreshed, check filters aren't excluding all data
 
 ### **Issue: Scheduled refresh fails**
-- **Solution**: Verify workspace capacity is running, check pipeline/notebook logs
+- **Solution**: Verify workspace capacity is running, check pipeline and Dataflow Gen2 logs for errors
 
 ---
 
@@ -1107,8 +1118,8 @@ ORDER BY AvgPassRate DESC;
 - **Bronze/Silver/Gold**: Data quality layers (Raw/Cleansed/Curated)
 - **Semantic Model**: Business logic layer defining relationships and calculations
 - **DAX**: Data Analysis Expressions - formula language for Power BI
-- **PySpark**: Python API for Apache Spark
 - **Dataflow Gen2**: Low-code ETL tool using Power Query
+- **Power Query**: Visual data transformation engine (M language)
 - **F32 Capacity**: Fabric compute capacity unit
 
 ---

@@ -112,25 +112,24 @@ Build a single-page executive dashboard that displays:
 
 ---
 
-### **Step 5: Add Visualization 1 - Readiness by Unit (3 minutes)**
+### **Step 5: Add Visualization 1 - Readiness Status by Division (3 minutes)**
 
-1. Click **Clustered bar chart** from Visualizations pane
-2. **Configure data**:
-   - **Y-axis**: `gold_unit_readiness_summary[UnitName]`
-   - **X-axis**: `gold_unit_readiness_summary[AvgReadinessScore]`
+1. Click **Stacked bar chart** from Visualizations pane
+2. **Configure data** (IMPORTANT: Add fields in this exact order):
+   - **Legend** (add this FIRST): `gold_unit_readiness_summary[OverallReadiness]`
+   - **Y-axis**: `gold_unit_readiness_summary[Division]`
+   - **X-axis**: `gold_unit_readiness_summary[UnitID]` (aggregation: Count Distinct)
 3. **Format visual**:
-   - **Title**: "Unit Readiness Scores"
+   - **Title**: "Unit Readiness Status by Division"
    - **Data labels**: ON
-   - **Y-axis**: Sort by AvgReadinessScore descending
-4. **Add conditional formatting**:
-   - Click on X-axis value → **Conditional formatting** → **Background color**
-   - **Format style**: Rules
-   - **Rules**:
-     - If value ≥ 95 then Green (#107C10)
-     - If value ≥ 90 then Orange (#FF8C00)
-     - Else Red (#D13438)
-5. Position: Middle-left area below KPI cards
-6. Size: ~400px wide × 300px tall
+   - **Data colors**: 
+     - GREEN → #107C10 (Green)
+     - AMBER → #FF8C00 (Orange)
+     - RED → #D13438 (Red)
+4. Position: Middle-left area below KPI cards
+5. Size: ~400px wide × 300px tall
+
+> **💡 Tip**: Adding the Legend field FIRST is critical - this ensures Power BI correctly groups the data and shows both divisions with stacked segments (GREEN/AMBER/RED).
 
 ---
 

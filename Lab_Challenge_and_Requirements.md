@@ -38,7 +38,7 @@ Build an end-to-end analytics solution using Microsoft Fabric that:
 
 #### 1. **Data Platform (Lakehouse)**
 - ✅ Create a Fabric Lakehouse named `ArmyReadinessLakehouse`
-- ✅ Upload 3 CSV files to the Files folder
+- ✅ Use GitHub-hosted CSV files via Web connector
 - ✅ Implement medallion architecture (Bronze/Silver/Gold)
 
 #### 2. **Data Integration (Pipeline + Dataflow)**
@@ -81,11 +81,12 @@ For `silver_training_metrics`:
 
 #### 4. **Semantic Model**
 - ✅ Create semantic model named `ArmyReadinessSemanticModel`
-- ✅ Include 3 tables: Gold (main), Silver Equipment, Silver Training
+- ✅ Include 4 tables: Gold (main), Silver Personnel, Silver Equipment, Silver Training
 - ✅ Define relationships:
+  - Gold → Personnel (One-to-Many on UnitID)
   - Gold → Equipment (One-to-Many on UnitID)
   - Gold → Training (One-to-Many on UnitID)
-- ✅ Create minimum 8 DAX measures (see report requirements below)
+- ✅ Create minimum 10 DAX measures (see report requirements below)
 
 #### 5. **Power BI Dashboard**
 - ✅ Single-page executive dashboard
@@ -113,12 +114,13 @@ Must include at minimum 3 KPI cards showing:
 
 The dashboard must contain at minimum **5 key visualizations**:
 
-#### **Visualization 1: Readiness Status by Unit**
-- **Type**: Stacked Bar Chart or Clustered Column Chart
-- **Axis**: Unit Name
-- **Values**: Avg Readiness Score
-- **Color**: Conditional formatting by OverallReadiness (GREEN/AMBER/RED)
-- **Purpose**: Show which units are performing well vs. at risk
+#### **Visualization 1: Readiness Status by Division**
+- **Type**: Stacked Bar Chart
+- **Legend** (add FIRST): OverallReadiness (GREEN/AMBER/RED)
+- **Y-axis**: Division
+- **X-axis**: UnitID (Count Distinct)
+- **Color**: GREEN = Green, AMBER = Orange, RED = Red
+- **Purpose**: Show readiness status distribution across divisions
 
 #### **Visualization 2: Readiness Trend or Distribution**
 - **Type**: Donut Chart or Pie Chart
@@ -146,22 +148,25 @@ The dashboard must contain at minimum **5 key visualizations**:
 
 ### **Required DAX Measures**
 
-Your semantic model must include at minimum these 8 measures:
+Your semantic model must include at minimum these 10 measures:
 
-**Unit Readiness Measures:**
+**Unit Readiness Measures (on gold_unit_readiness_summary):**
 1. `Total Units` - Count of distinct units
 2. `Units GREEN` - Count of units with GREEN status
 3. `Units AMBER` - Count of units with AMBER status
 4. `Units RED` - Count of units with RED status
 5. `Readiness Percentage` - Percentage of GREEN units
 
-**Equipment Measures:**
+**Equipment Measures (on silver_equipment_inventory):**
 6. `Total Equipment` - Sum of equipment quantities
 7. `Operational Equipment` - Sum of operational equipment
 8. `Equipment Readiness %` - Percentage of operational equipment
 
+**Training Measures (on silver_training_metrics):**
+9. `Avg Training Pass Rate` - Average of PassRate column
+10. `Avg Completion Rate` - Average of CompletionRate column
+
 **Optional Advanced Measures:**
-- Training completion rates
 - Personnel present percentages
 - Combined readiness scores
 - Trend calculations (period-over-period)
@@ -267,7 +272,7 @@ When complete, your dashboard should enable commanders to answer:
 | Phase | Activity | Time | Deliverable |
 |-------|----------|------|-------------|
 | 1 | Environment Setup | 10 min | Workspace + Lakehouse created |
-| 2 | Data Pipeline Creation | 15 min | Pipeline created, CSVs uploaded |
+| 2 | Data Pipeline Creation | 15 min | Pipeline created, GitHub URLs ready |
 | 3 | Dataflow Gen2 Transformations | 45 min | Bronze/Silver/Gold tables populated |
 | 4 | Semantic Model Creation | 15 min | Model with relationships + DAX measures |
 | 5 | Power BI Dashboard | 20 min | Interactive dashboard with 5+ visuals |
@@ -282,7 +287,7 @@ Before submitting/presenting your solution, verify:
 
 ### **Data Platform**
 - [ ] Lakehouse created and accessible
-- [ ] 3 CSV files uploaded to Files folder
+- [ ] 3 CSV files accessed via GitHub Web connector
 - [ ] 3 Bronze tables exist with raw data
 - [ ] 3 Silver tables exist with transformations
 - [ ] 1 Gold table exists with unit-level aggregations
@@ -294,9 +299,9 @@ Before submitting/presenting your solution, verify:
 - [ ] Pipeline can be run on-demand
 
 ### **Semantic Model**
-- [ ] Model includes 3 tables (Gold + 2 Silver)
-- [ ] 2 relationships defined (both one-to-many)
-- [ ] Minimum 8 DAX measures created
+- [ ] Model includes 4 tables (Gold + 3 Silver: Personnel, Equipment, Training)
+- [ ] 3 relationships defined (all one-to-many from Gold table)
+- [ ] Minimum 10 DAX measures created
 - [ ] Measures calculate correctly
 
 ### **Power BI Dashboard**
