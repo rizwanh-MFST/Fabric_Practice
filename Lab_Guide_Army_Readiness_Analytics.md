@@ -277,6 +277,7 @@ Now we'll create a Silver layer with calculated columns:
    - If `AvgReadinessScore` **is greater than or equal to** `95` then `GREEN`
    - else if `AvgReadinessScore` **is greater than or equal to** `90` then `AMBER`
    - Otherwise: `RED`
+   - Change type to Text
 
 8. Add destination: Lakehouse → New table: `gold_unit_readiness_summary`
 
@@ -1133,4 +1134,5 @@ ORDER BY AvgPassRate DESC;
 **Date: November 2025**
 
 **UNCLASSIFIED // FOR TRAINING USE ONLY**
+
 
